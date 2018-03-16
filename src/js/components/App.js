@@ -1,5 +1,12 @@
 import m from 'mithril';
 
+const progressBarClasses = [
+    'bg-success',
+    'bg-info',
+    'bg-warning',
+    'bg-danger',
+];
+
 export default{
     oninit(vnode) {
         vnode.state.usages = [
@@ -28,8 +35,9 @@ export default{
             total += (usage.rate * usage.total);
         });
 
-        return [
+        let progressBarStyleIndex = 0;
 
+        return [
             m('header.mb-3', [
                 m('nav.navbar.navbar-expand-lg.navbar-dark.bg-dark', m('.container', [
                     m('span.navbar-brand', [m('span.fa.fa-tint'), ' My Water Usage']),
@@ -43,6 +51,26 @@ export default{
             ]),
             m('.container', [
                 m('p.text-center.text-success', 'Total: ' + total + ' liters'),
+                m('.progress.mb-3', {
+                    style: {
+                        height: '4em',
+                    },
+                }, vnode.state.usages.map(
+                    usage => {
+                        const usageTotal = usage.rate * usage.total;
+
+                        if (!usageTotal) {
+                            return null;
+                        }
+
+                        return m('.progress-bar', {
+                            className: progressBarClasses[progressBarStyleIndex++ % progressBarClasses.length],
+                            style: {
+                                width: ((usageTotal / total) * 100) + '%',
+                            },
+                        }, usage.title);
+                    }
+                )),
                 m('.list-group', vnode.state.usages.map(
                     usage => m('.list-group-item', [
                         m('.form-group', [
