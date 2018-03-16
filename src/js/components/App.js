@@ -95,12 +95,26 @@ export default{
                             m('.col-3', 'liter'),
                         ]),
                         m('.form-group', [
-                            m('input[type=number].form-control', {
-                                value: usage.total,
-                                onchange: m.withAttr('value', value => {
-                                    usage.total = parseInt(value);
+                            m('.input-group', [
+                                m('input[type=number].form-control', {
+                                    value: usage.total,
+                                    onchange: m.withAttr('value', value => {
+                                        usage.total = parseInt(value);
+                                    }),
                                 }),
-                            }),
+                                m('.input-group-append', [
+                                    m('button.btn.btn-outline-secondary', {
+                                        onclick() {
+                                            usage.total -= 1;
+                                        },
+                                    }, m('span.fa.fa-minus')),
+                                    m('button.btn.btn-outline-secondary', {
+                                        onclick() {
+                                            usage.total += 1;
+                                        },
+                                    }, m('span.fa.fa-plus')),
+                                ]),
+                            ]),
                         ]),
                     ])
                 )),
