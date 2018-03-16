@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="ch.agrijura.jeu" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>AGRIJURA Jeu</name>
+<widget id="ch.robots-ju.hydrodynamics.juratlantique" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>My Water Usage</name>
     <description>
-        Jeu AGRIJURA pour les foires
+        Calculate your water usage
     </description>
     <author email="clark.winkelmann@gmail.com" href="https://clarkwinkelmann.com/">
         Clark Winkelmann
