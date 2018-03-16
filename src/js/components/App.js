@@ -1,4 +1,5 @@
 import m from 'mithril';
+import Entry from './Entry';
 
 const progressBarClasses = [
     'bg-success',
@@ -31,7 +32,6 @@ export default{
         let total = 0;
 
         vnode.state.usages.forEach(usage => {
-            console.log(usage.rate * usage.total);
             total += (usage.rate * usage.total);
         });
 
@@ -72,28 +72,11 @@ export default{
                     }
                 )),
                 m('.list-group', vnode.state.usages.map(
-                    usage => m('.list-group-item', [
-                        m('.form-group', [
-                            m('input[type=text].form-control', {
-                                value: usage.title,
-                                oninput: m.withAttr('value', value => {
-                                    usage.title = value;
-                                }),
-                            }),
-                        ]),
-                        m('.row', [
-                            m('.col-9', [
-                                m('.form-group', [
-                                    m('input[type=number].form-control', {
-                                        value: usage.rate,
-                                        onchange: m.withAttr('value', value => {
-                                            usage.rate = parseInt(value);
-                                        }),
-                                    }),
-                                ]),
-                            ]),
-                            m('.col-3', 'liter'),
-                        ]),
+                    (usage, usageIndex) => m('.list-group-item', [
+                        m(Entry, {
+                            usage,
+                            usageIndex,
+                        }),
                         m('.form-group', [
                             m('.input-group', [
                                 m('input[type=number].form-control', {
