@@ -15,6 +15,11 @@ export default {
                         vnode.state.edit = false;
                     },
                 }, 'Done editing'),
+                m('button.btn.btn-block.btn-sm.btn-danger', {
+                    onclick() {
+                        vnode.attrs.ondelete();
+                    },
+                }, 'Delete this usage type'),
                 m('.form-group', [
                     m('label', {
                         for: 'edit-usage-title-' + usageIndex,
@@ -24,6 +29,8 @@ export default {
                         value: usage.title,
                         oninput: m.withAttr('value', value => {
                             usage.title = value;
+
+                            vnode.attrs.onchange();
                         }),
                     }),
                 ]),
@@ -36,6 +43,8 @@ export default {
                         value: usage.rate,
                         oninput: m.withAttr('value', value => {
                             usage.rate = parseInt(value);
+
+                            vnode.attrs.onchange();
                         }),
                     }),
                 ]),

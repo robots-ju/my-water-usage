@@ -10,22 +10,44 @@ const progressBarClasses = [
 
 export default{
     oninit(vnode) {
-        vnode.state.usages = [
-            {
-                title: 'Toilettes',
-                rate: 10,
-                total: 0,
-            },
-            {
-                title: 'Vaisselle',
-                rate: 20,
-                total: 3,
-            },
-        ];
+        const savedUsages = localStorage.getItem('usages');
+
+        console.log(savedUsages);
+
+        if (savedUsages) {
+            try {
+                vnode.state.usages = JSON.parse(savedUsages);
+            } catch (e) {
+                alert('Could not load saved data');
+
+                vnode.state.usages = [];
+            }
+        } else {
+            vnode.state.usages = [
+                {
+                    title: 'Toilettes',
+                    uid: 1,
+                    rate: 10,
+                    total: 0,
+                },
+                {
+                    title: 'Vaisselle',
+                    uid: 2,
+                    rate: 20,
+                    total: 3,
+                },
+            ];
+        }
+
+        vnode.state.nextUid = vnode.state.usages.length;
 
         vnode.state.newUsage = {
             title: '',
             rate: 10,
+        };
+
+        vnode.state.saveChanges = () => {
+            localStorage.setItem('usages', JSON.stringify(vnode.state.usages));
         };
     },
     view(vnode) {
@@ -74,8 +96,17 @@ export default{
                 m('.list-group', vnode.state.usages.map(
                     (usage, usageIndex) => m('.list-group-item', [
                         m(Entry, {
+                            key: usage.uid,
                             usage,
                             usageIndex,
+                            onchange() {
+                                vnode.state.saveChanges();
+                            },
+                            ondelete() {
+                                vnode.state.usages.splice(usageIndex, 1);
+
+                                vnode.state.saveChanges();
+                            },
                         }),
                         m('.form-group', [
                             m('.input-group', [
@@ -83,17 +114,23 @@ export default{
                                     value: usage.total,
                                     onchange: m.withAttr('value', value => {
                                         usage.total = parseInt(value);
+
+                                        vnode.state.saveChanges();
                                     }),
                                 }),
                                 m('.input-group-append', [
                                     m('button.btn.btn-outline-secondary', {
                                         onclick() {
                                             usage.total -= 1;
+
+                                            vnode.state.saveChanges();
                                         },
                                     }, m('span.fa.fa-minus')),
                                     m('button.btn.btn-outline-secondary', {
                                         onclick() {
                                             usage.total += 1;
+
+                                            vnode.state.saveChanges();
                                         },
                                     }, m('span.fa.fa-plus')),
                                 ]),
@@ -124,10 +161,13 @@ export default{
                     m('.btn.btn-block.btn-primary', {
                         onclick() {
                             vnode.state.usages.push({
+                                uid: ++vnode.state.nextUid,
                                 title: vnode.state.newUsage.title,
                                 rate: vnode.state.newUsage.rate,
                                 total: 0,
                             });
+
+                            vnode.state.saveChanges();
 
                             vnode.state.newUsage = {
                                 title: '',
